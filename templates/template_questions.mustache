@@ -1,0 +1,20 @@
+<div class="oralint-template-questions">
+    <div class="oralint-header">
+        <h2>{{{heading}}}</h2>
+        <p>{{{template.name}}} &mdash; {{{template.jobtitle}}}</p>
+    </div>
+    {{#questions}}
+        <div class="oralint-question-row">
+            <div class="oralint-question-text">{{{text}}}</div>
+            <div class="oralint-question-meta">
+                <span>{{maxscore}} {{#str}}maxscore, oralinterview{{/str}}</span>
+                <div>{{{editlink}}}</div>
+                <div>{{{deletelink}}}</div>
+            </div>
+            <div class="oralint-question-rubric">{{{rubric}}}</div>
+        </div>
+    {{/questions}}
+    {{^questions}}
+        <div class="alert alert-warning">{{#str}}noquestions, oralinterview{{/str}}</div>
+    {{/questions}}
+</div>
