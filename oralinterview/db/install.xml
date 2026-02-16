@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/oralinterview/db" VERSION="2026010100" COMMENT="XMLDB file for Moodle mod/oralinterview"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="oralinterview" COMMENT="Base module record">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Course ID" />
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Activity name" />
+                <FIELD NAME="jobid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Job ID from approved_jobs" />
+                <FIELD NAME="intro" TYPE="text" NOTNULL="false" COMMENT="Activity description" />
+                <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" COMMENT="Intro format" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+                <KEY NAME="fk_oralinterview_job" TYPE="foreign" FIELDS="jobid" REFTABLE="approved_jobs" REFFIELDS="jobid" COMMENT="Job foreign key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralinterview_course" UNIQUE="false" FIELDS="course" COMMENT="Course index" />
+                <INDEX NAME="oralinterview_jobid" UNIQUE="false" FIELDS="jobid" COMMENT="Job index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_candidate" COMMENT="External candidate data">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="fullname" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Candidate full name" />
+                <FIELD NAME="email" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Candidate email" />
+                <FIELD NAME="phone" TYPE="char" LENGTH="50" NOTNULL="false" COMMENT="Candidate phone" />
+                <FIELD NAME="nationalid" TYPE="char" LENGTH="64" NOTNULL="false" COMMENT="National ID" />
+                <FIELD NAME="linkeduserid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Linked Moodle user ID" />
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="false" DEFAULT="active" COMMENT="Candidate status" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_candidate_nationalid" UNIQUE="false" FIELDS="nationalid" COMMENT="National ID index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_template" COMMENT="Interview templates">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Course ID" />
+                <FIELD NAME="oralinterviewid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Oral Interview Activity ID" />
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Template name" />
+                <FIELD NAME="jobtitle" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Job title" />
+                <FIELD NAME="jobid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Job ID from approved_jobs" />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" COMMENT="Template description" />
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" COMMENT="Template status" />
+                <FIELD NAME="maxscore" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="10" COMMENT="Maximum score" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+                <KEY NAME="fk_template_job" TYPE="foreign" FIELDS="jobid" REFTABLE="approved_jobs" REFFIELDS="jobid" COMMENT="Job foreign key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_template_course" UNIQUE="false" FIELDS="courseid" COMMENT="Course index" />
+                <INDEX NAME="oralint_template_oralinterview" UNIQUE="false" FIELDS="oralinterviewid" COMMENT="Oral Interview index" />
+                <INDEX NAME="oralint_template_jobid" UNIQUE="false" FIELDS="jobid" COMMENT="Job index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_template_q" COMMENT="Template questions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="templateid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Template ID" />
+                <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Question Bank ID" />
+                <FIELD NAME="questiontext" TYPE="text" NOTNULL="false" COMMENT="Question text" />
+                <FIELD NAME="rubric" TYPE="text" NOTNULL="false" COMMENT="Scoring rubric" />
+                <FIELD NAME="maxscore" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="10" COMMENT="Maximum score" />
+                <FIELD NAME="sortorder" TYPE="int" LENGTH="6" NOTNULL="false" COMMENT="Sort order" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+                <KEY NAME="idx_template" TYPE="foreign" FIELDS="templateid" REFTABLE="oralint_template" REFFIELDS="id" COMMENT="Template foreign key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_tq_template" UNIQUE="false" FIELDS="templateid" COMMENT="Template index" />
+                <INDEX NAME="oralint_tq_sort" UNIQUE="false" FIELDS="templateid,sortorder" COMMENT="Template sort index" />
+                <INDEX NAME="oralint_tq_question" UNIQUE="false" FIELDS="questionid" COMMENT="Question index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_session" COMMENT="Interview sessions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Course ID" />
+                <FIELD NAME="oralinterviewid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Oral interview activity ID" />
+                <FIELD NAME="candidateid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Candidate ID" />
+                <FIELD NAME="templateid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Template ID" />
+                <FIELD NAME="interviewdate" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Interview date timestamp" />
+                <FIELD NAME="deadline" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Evaluation deadline timestamp" />
+                <FIELD NAME="requireall" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" COMMENT="Require all committee members" />
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" COMMENT="Session status" />
+                <FIELD NAME="finalscore" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" COMMENT="Final calculated score" />
+                <FIELD NAME="finalpercent" TYPE="number" LENGTH="6" DECIMALS="2" NOTNULL="false" COMMENT="Final percentage" />
+                <FIELD NAME="committeecount" TYPE="int" LENGTH="4" NOTNULL="false" COMMENT="Number of committee members" />
+                <FIELD NAME="questioncount" TYPE="int" LENGTH="4" NOTNULL="false" COMMENT="Number of questions" />
+                <FIELD NAME="formula_version" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="v1" COMMENT="Scoring formula version" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_session_course" UNIQUE="false" FIELDS="courseid" COMMENT="Course index" />
+                <INDEX NAME="oralint_session_candidate" UNIQUE="false" FIELDS="candidateid" COMMENT="Candidate index" />
+                <INDEX NAME="oralint_session_status" UNIQUE="false" FIELDS="status" COMMENT="Status index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_session_q" COMMENT="Snapshot of template questions per session">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Session ID" />
+                <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Question Bank ID" />
+                <FIELD NAME="questiontext" TYPE="text" NOTNULL="true" COMMENT="Question text snapshot" />
+                <FIELD NAME="rubric" TYPE="text" NOTNULL="false" COMMENT="Rubric snapshot" />
+                <FIELD NAME="maxscore" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="10" COMMENT="Maximum score" />
+                <FIELD NAME="sortorder" TYPE="int" LENGTH="6" NOTNULL="false" COMMENT="Sort order" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+                <KEY NAME="fk_session" TYPE="foreign" FIELDS="sessionid" REFTABLE="oralint_session" REFFIELDS="id" COMMENT="Session foreign key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_session_q_session" UNIQUE="false" FIELDS="sessionid" COMMENT="Session index" />
+                <INDEX NAME="oralint_session_q_sort" UNIQUE="false" FIELDS="sessionid,sortorder" COMMENT="Session sort index" />
+                <INDEX NAME="oralint_session_q_question" UNIQUE="false" FIELDS="questionid" COMMENT="Question index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_committee" COMMENT="Committee membership per session">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Session ID" />
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="User ID" />
+                <FIELD NAME="role" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="member" COMMENT="Committee role" />
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="false" COMMENT="Membership status" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+                <KEY NAME="fk_session" TYPE="foreign" FIELDS="sessionid" REFTABLE="oralint_session" REFFIELDS="id" COMMENT="Session foreign key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_committee_session" UNIQUE="false" FIELDS="sessionid" COMMENT="Session index" />
+                <INDEX NAME="oralint_committee_user" UNIQUE="false" FIELDS="userid" COMMENT="User index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_eval" COMMENT="Committee evaluation per member">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Session ID" />
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="User ID" />
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="notstarted" COMMENT="Evaluation status" />
+                <FIELD NAME="finalscore" TYPE="number" LENGTH="10" DECIMALS="5" NOTNULL="false" COMMENT="Final evaluation score" />
+                <FIELD NAME="submitreason" TYPE="text" NOTNULL="false" COMMENT="Submission reason" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+                <KEY NAME="fk_session" TYPE="foreign" FIELDS="sessionid" REFTABLE="oralint_session" REFFIELDS="id" COMMENT="Session foreign key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_eval_session" UNIQUE="false" FIELDS="sessionid" COMMENT="Session index" />
+                <INDEX NAME="oralint_eval_user" UNIQUE="false" FIELDS="userid" COMMENT="User index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_score" COMMENT="Per-question score records">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="evaluationid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Evaluation ID" />
+                <FIELD NAME="sessionqid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Session question ID" />
+                <FIELD NAME="score" TYPE="number" LENGTH="5" DECIMALS="2" NOTNULL="true" COMMENT="Question score" />
+                <FIELD NAME="comment" TYPE="text" NOTNULL="false" COMMENT="Score comment" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Modification timestamp" />
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="User who modified" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+                <KEY NAME="fk_eval" TYPE="foreign" FIELDS="evaluationid" REFTABLE="oralint_eval" REFFIELDS="id" COMMENT="Evaluation foreign key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_score_eval" UNIQUE="false" FIELDS="evaluationid" COMMENT="Evaluation index" />
+                <INDEX NAME="oralint_score_sessionq" UNIQUE="false" FIELDS="sessionqid" COMMENT="Session question index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="oralint_audit" COMMENT="Immutable audit log">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key" />
+                <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Session ID" />
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="User ID" />
+                <FIELD NAME="action" TYPE="char" LENGTH="64" NOTNULL="true" COMMENT="Action performed" />
+                <FIELD NAME="entity" TYPE="char" LENGTH="64" NOTNULL="true" COMMENT="Entity affected" />
+                <FIELD NAME="oldvalue" TYPE="text" NOTNULL="false" COMMENT="Previous value" />
+                <FIELD NAME="newvalue" TYPE="text" NOTNULL="false" COMMENT="New value" />
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false" COMMENT="Reason for change" />
+                <FIELD NAME="ip" TYPE="char" LENGTH="45" NOTNULL="false" COMMENT="IP address" />
+                <FIELD NAME="crud" TYPE="char" LENGTH="1" NOTNULL="false" COMMENT="CRUD operation" />
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Creation timestamp" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="oralint_audit_session" UNIQUE="false" FIELDS="sessionid" COMMENT="Session index" />
+                <INDEX NAME="oralint_audit_user" UNIQUE="false" FIELDS="userid" COMMENT="User index" />
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="job_competency_type" COMMENT="Links jobs to competencies with interview/exam types">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key"/>
+                <FIELD NAME="jobid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Job ID from approved_jobs"/>
+                <FIELD NAME="competency_id" TYPE="text" NOTNULL="true" COMMENT="Competency ID from competencyindicators"/>
+                <FIELD NAME="competency_name" TYPE="text" NOTNULL="true" COMMENT="Competency name"/>
+                <FIELD NAME="competency_type" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="both" COMMENT="interview/exam/both"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Creation timestamp"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Modification timestamp"/>
+                <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User who modified"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key"/>
+                <KEY NAME="fk_job_competency_job" TYPE="foreign" FIELDS="jobid" REFTABLE="approved_jobs" REFFIELDS="jobid" COMMENT="Job foreign key"/>
+                <KEY NAME="fk_job_competency_user" TYPE="foreign" FIELDS="usermodified" REFTABLE="user" REFFIELDS="id" COMMENT="User foreign key"/>
+            </KEYS>
+            <INDEXES>
+                <!-- Foreign keys automatically create indexes, so we don't need manual ones for the same fields -->
+                <INDEX NAME="idx_competency" FIELDS="competency_id(50)" COMMENT="Competency index"/>
+                <INDEX NAME="idx_type" FIELDS="competency_type" COMMENT="Type index"/>
+            </INDEXES>
+        </TABLE>
+
+    </TABLES>
+</XMLDB>

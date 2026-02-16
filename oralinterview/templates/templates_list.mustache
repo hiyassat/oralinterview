@@ -1,0 +1,22 @@
+<div class="oralint-templates">
+    <div class="oralint-header">
+        <h2>{{{heading}}}</h2>
+        <a class="btn btn-primary" href="{{{addtemplateurl}}}">{{addtemplate}}</a>
+    </div>
+    {{#templates}}
+        <div class="oralint-template-row">
+            <div class="oralint-template-info">
+                <strong>{{{name}}}</strong>
+                <p>{{{jobtitle}}}</p>
+            </div>
+            <div class="oralint-template-actions">
+                <span class="text-muted">{{status}}</span>
+                <div>{{{questionslink}}}</div>
+                <div>{{{editlink}}}</div>
+            </div>
+        </div>
+    {{/templates}}
+    {{^templates}}
+        <div class="alert alert-info">{{#str}}notemplates, oralinterview{{/str}}</div>
+    {{/templates}}
+</div>
